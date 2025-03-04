@@ -109,34 +109,74 @@
 
 	</dependencies>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
-					<configuration>
-						<release>17</release>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>exec-maven-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>compile</id>
-							<phase>compile</phase>
-							<goals>
-								<goal>java</goal>
-							</goals>
-						</execution>
-					</executions>
-					<!-- the configuration element must be OUTSIDE the element executions!! -->
-				</plugin>
+   <build>
+                <pluginManagement>
+                        <plugins>
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-compiler-plugin</artifactId>
+                                        <version>3.8.0</version>
+                                        <configuration>
+                                                <release>17</release>
+                                        </configuration>
+                                </plugin>
+                                <plugin>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>exec-maven-plugin</artifactId>
+                                        <executions>
+                                                <execution>
+                                                        <id>compile</id>
+                                                        <phase>compile</phase>
+                                                        <goals>
+                                                                <goal>java</goal>
+                                                        </goals>
+                                                </execution>
+                                        </executions>
+                                        <!-- the configuration element must be OUTSIDE the element
+                                        executions!! -->
+                                </plugin>
 
-			</plugins>
-		</pluginManagement>
-	</build>
 
+                        </plugins>
+                </pluginManagement>
+                <plugins>
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-shade-plugin</artifactId>
+                                <version>3.3.0</version>
+                                <executions>
+                                        <execution>
+                                                <phase>package</phase>
+                                                <goals>
+                                                        <goal>shade</goal>
+                                                </goals>
+                                                <configuration>
+                                                        <!-- Optionally disable the dependency-reduced POM -->
+                                                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                                                        <transformers>
+                                                                <!-- Set the main class in the manifest -->
+                                                                <transformer
+                                                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                                                        <mainClass>
+                                                                                net.spikesync.pingerdaemonrabbitmqclient.PingDaemon
+                                                                        </mainClass>
+                                                                </transformer>
+                                                                <!-- Merge Spring metadata to ensure namespace
+                                                                handlers are available -->
+                                                                <transformer
+                                                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                                                        <resource>META-INF/spring.handlers</resource>
+                                                                </transformer>
+                                                                <transformer
+                                                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                                                        <resource>META-INF/spring.schemas</resource>
+                                                                </transformer>
+                                                        </transformers>
+                                                </configuration>
+                                        </execution>
+                                </executions>
+                        </plugin>
+                        <!-- other plugins -->
+                </plugins>
+        </build>
 </project>
