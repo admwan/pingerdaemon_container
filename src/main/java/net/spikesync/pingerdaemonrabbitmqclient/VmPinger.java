@@ -1,9 +1,12 @@
 package net.spikesync.pingerdaemonrabbitmqclient;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -66,6 +69,43 @@ public class VmPinger implements Runnable {
 		return pingEntry;
 	}
 	
+	public PingEntry rawICMPPing() {
+		PingEntry pingEntry = new PingEntry(new Date(), this.origNode, this.destNode, PINGRESULT.PINGUNKOWN, PINGHEAT.UNKNOWN);
+		
+        try (DatagramSocket socket = new DatagramSocket()) {
+            socket.setSoTimeout(2000); // 2-second timeout
+
+            InetAddress host = InetAddress.getByName(this.destNode.getIpAddress());
+            byte[] sendData = createICMPPacket();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, host, 0);
+            socket.send(sendPacket);
+
+            byte[] receiveData = new byte[48];
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            socket.receive(receivePacket);
+            pingEntry.setLastPingResult(PINGRESULT.PINGSUCCESS);
+            logger.debug("SUCCESSFUL raw ICMP Ping!! Result: " + pingEntry.toString());
+  
+        } catch (SocketTimeoutException e) {
+            pingEntry.setLastPingResult(PINGRESULT.PINGFAILURE);
+            logger.debug("--UN--SUCCESSFUL raw ICMP Ping!! Result: " + pingEntry.toString());
+        } catch (IOException e) {
+            pingEntry.setLastPingResult(PINGRESULT.PINGFAILURE);
+            logger.debug("--UN--SUCCESSFUL raw ICMP Ping!! Result: " + pingEntry.toString());
+        }
+
+		
+		return pingEntry;
+	}
+	
+    private static byte[] createICMPPacket() {
+        byte[] packet = new byte[48];
+        packet[0] = 8;  // ICMP Echo Request
+        packet[1] = 0;  // Code (0)
+        return packet;
+    }
+
+	
 	@Override
 	public void run() {
 		while (true) {
@@ -73,7 +113,8 @@ public class VmPinger implements Runnable {
 			 * Run method pingVm() to ping the destination and insert the result in the list of PingEntry's: 
 			 * this.pingentries. After adding them, clear the list of PingEntry's.
 			 */
-			this.pingentries.add(this.pingVm());
+			this.pingentries.add(this.rawICMPPing());
+//			this.pingentries.add(this.pingVm());
 			try {
 				Thread.sleep(VmPinger.threadSleep);
 			} catch (InterruptedException e) {
