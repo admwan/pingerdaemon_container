@@ -1,1 +1,1 @@
-mvn exec:java -Dexec.args="ZEEVLO" -Dexec.mainClass="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon"
+mvn exec:java -Dexec.args="HYDRFS" -Dexec.mainClass="net.spikesync.pingerdaemonrabbitmqclient.PingDaemon"

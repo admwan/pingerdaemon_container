@@ -31,7 +31,7 @@ import net.spikesync.pingerdaemonrabbitmqclient.SilverCloudNode;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("classpath:beans.xml")
 public class SimpleJunit5Test {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(SimpleJunit5Test.class);
 
 	@Autowired
@@ -49,29 +49,38 @@ public class SimpleJunit5Test {
 
 	@Test
 	public void messageTest() {
-		
+
 //		try {
 //			LogbackConfigurator.configure("logback.xml");
 //		} catch (JoranException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		
-		logger.info("Now in SimpleJunit5Test.messageTest!!!! LOGGER WORKS @INFO ------------------------------------------");
+
+		logger.info(
+				"Now in SimpleJunit5Test.messageTest!!!! LOGGER WORKS @INFO ------------------------------------------");
 		System.out.println("Logger name: " + logger.getName());
 		System.out.println("Logger enabled for debugging? " + logger.isDebugEnabled());
 		System.out.println("Logger enabled for error? " + logger.isErrorEnabled());
 		System.out.println("Now in SimpleJunit5Test.messageTest ---  System.out, not the logger!!!!");
-		
+
+		// Test fedsky
 		ArrayList<SilverCloudNode> nodes = sc.getScNodes();
 		SilverCloudNode targetNode = null;
 		for (SilverCloudNode node : nodes) {
-			if (node.getNodeName().equals("APOLLO")) targetNode = node;  
+			if (node.getNodeName().equals("APOLLO"))
+				targetNode = node;
 		}
 		assertEquals("192.168.50.227", targetNode.getIpAddress());
+
+		/*
+		 * ArrayList<SilverCloudNode> nodes = sc.getScNodes(); SilverCloudNode
+		 * targetNode = null; for (SilverCloudNode node : nodes) { if
+		 * (node.getNodeName().equals("THORFW")) targetNode = node; }
+		 */
+		
 	}
 
-	
 	@AfterEach
 	void tearDown(TestInfo testInfo) {
 		System.out.println("Finished..." + testInfo.getDisplayName());
@@ -81,4 +90,4 @@ public class SimpleJunit5Test {
 	static void tearDownAll() {
 		System.out.println("---Inside tearDownAll---");
 	}
-} 
+}
