@@ -148,7 +148,7 @@
                                         <execution>
                                                 <phase>package</phase>
                                                 <goals>
-                                                        <goal>shade</goal>
+                                                	<goal>shade</goal>
                                                 </goals>
                                                 <configuration>
                                                         <!-- Optionally disable the dependency-reduced POM -->

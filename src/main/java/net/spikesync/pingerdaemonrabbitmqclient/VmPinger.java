@@ -88,15 +88,25 @@ public class VmPinger implements Runnable {
   
         } catch (SocketTimeoutException e) {
             pingEntry.setLastPingResult(PINGRESULT.PINGFAILURE);
-            logger.debug("--UN--SUCCESSFUL raw ICMP Ping!! Result: " + pingEntry.toString());
+            logger.debug("--UN--SUCCESSFUL raw ICMP Ping -- Socket Time out!! Result: " + pingEntry.toString());
+            logger.debug(e.toString());
         } catch (IOException e) {
             pingEntry.setLastPingResult(PINGRESULT.PINGFAILURE);
             logger.debug("--UN--SUCCESSFUL raw ICMP Ping!! Result: " + pingEntry.toString());
+            logger.debug(e.toString());
         }
 
 		
 		return pingEntry;
 	}
+	
+	public PingEntry rawICMPJNI() {
+		PingEntry pingEntry = new PingEntry(new Date(), this.origNode, this.destNode, PINGRESULT.PINGUNKOWN, PINGHEAT.UNKNOWN);
+		
+		return pingEntry;
+
+	}
+	
 	
     private static byte[] createICMPPacket() {
         byte[] packet = new byte[48];
