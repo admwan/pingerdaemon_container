@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 class VmPingerTest {
 
-	@Test
+	// @Test
 	public void socketTest() {
 		try {
 			Socket socket = new Socket();

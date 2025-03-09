@@ -26,6 +26,16 @@ import net.spikesync.pingerdaemonrabbitmqclient.PingEntry.PINGRESULT;
 
 public class VmPinger implements Runnable {
 
+	/*
+	static {
+        System.loadLibrary("icmp_native"); // Load native library (libicmp_native.so / icmp_native.dll)
+    }
+
+    // Declare the native method
+    public native boolean sendICMPPing(String ip);
+*/
+	private RawICMPJNI rawICMPJNI;
+	
 	private static int pingPort = 22;
 	private static int pingTimeout = 2000;
 	private static long threadSleep = 2000;
@@ -39,6 +49,7 @@ public class VmPinger implements Runnable {
 		this.origNode = orNo;
 		this.destNode = deNo;
 		this.pingentries = new ArrayList<PingEntry>();
+		this.rawICMPJNI = new RawICMPJNI();
 	}
 	
 	public ArrayList<PingEntry> getPingEntries() {
@@ -103,6 +114,16 @@ public class VmPinger implements Runnable {
 	public PingEntry rawICMPJNI() {
 		PingEntry pingEntry = new PingEntry(new Date(), this.origNode, this.destNode, PINGRESULT.PINGUNKOWN, PINGHEAT.UNKNOWN);
 		
+	     if (this.rawICMPJNI.sendPing(this.destNode.getIpAddress())) {
+	           pingEntry.setLastPingResult(PINGRESULT.PINGSUCCESS);
+	            logger.debug("SUCCESSFUL raw ICMP Ping using libicmp_native.so!! Result: " + pingEntry.toString());
+
+	        } else {
+
+	            pingEntry.setLastPingResult(PINGRESULT.PINGFAILURE);
+	            logger.debug("--UN--SUCCESSFUL raw ICMP Ping -- using libicmp_native.so!! Result: " + pingEntry.toString());
+	        }
+	   
 		return pingEntry;
 
 	}
@@ -123,8 +144,9 @@ public class VmPinger implements Runnable {
 			 * Run method pingVm() to ping the destination and insert the result in the list of PingEntry's: 
 			 * this.pingentries. After adding them, clear the list of PingEntry's.
 			 */
-			this.pingentries.add(this.rawICMPPing());
+//			this.pingentries.add(this.rawICMPPing());
 //			this.pingentries.add(this.pingVm());
+			this.pingentries.add(this.rawICMPJNI());
 			try {
 				Thread.sleep(VmPinger.threadSleep);
 			} catch (InterruptedException e) {
