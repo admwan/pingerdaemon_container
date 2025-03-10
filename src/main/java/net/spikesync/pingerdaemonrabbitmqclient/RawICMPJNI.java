@@ -36,7 +36,7 @@ public class RawICMPJNI {
         }
     }
   
-    public native boolean sendPing(String ipAddress);
+    public native boolean sendICMPPing(String ipAddress);
 }
  /*
 static {

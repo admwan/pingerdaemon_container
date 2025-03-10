@@ -68,10 +68,10 @@ public class SimpleJunit5Test {
 		ArrayList<SilverCloudNode> nodes = sc.getScNodes();
 		SilverCloudNode targetNode = null;
 		for (SilverCloudNode node : nodes) {
-			if (node.getNodeName().equals("THORFW"))
+			if (node.getNodeName().equals("WITOOG"))
 				targetNode = node;
 		}
-		assertEquals("192.168.50.107", targetNode.getIpAddress());
+		assertEquals("192.168.50.233", targetNode.getIpAddress());
 
 		/*
 		 * ArrayList<SilverCloudNode> nodes = sc.getScNodes(); SilverCloudNode

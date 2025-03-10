@@ -114,7 +114,7 @@ public class VmPinger implements Runnable {
 	public PingEntry rawICMPJNI() {
 		PingEntry pingEntry = new PingEntry(new Date(), this.origNode, this.destNode, PINGRESULT.PINGUNKOWN, PINGHEAT.UNKNOWN);
 		
-	     if (this.rawICMPJNI.sendPing(this.destNode.getIpAddress())) {
+	     if (this.rawICMPJNI.sendICMPPing(this.destNode.getIpAddress())) {
 	           pingEntry.setLastPingResult(PINGRESULT.PINGSUCCESS);
 	            logger.debug("SUCCESSFUL raw ICMP Ping using libicmp_native.so!! Result: " + pingEntry.toString());
 
