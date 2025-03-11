@@ -13,8 +13,8 @@
 	http://www.springframework.org/schema/rabbit https://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
 	<bean id="silverCloud" class="net.spikesync.pingerdaemonrabbitmqclient.SilverCloud">
-		<constructor-arg ref = "scNodeIpMap" />
-<!--		<constructor-arg ref="fedskyNodeIpMap"/>  --> 	 
+<!--			<constructor-arg ref = "scNodeIpMap" />  --> 
+		<constructor-arg ref="fedskyNodeIpMap"/>	 
 		</bean>
 
 	<util:map id="fedskyNodeIpMap" map-class="java.util.HashMap"
