@@ -1,0 +1,1 @@
+docker rm -f pingerdaemon-SURFIE  pingerdaemon-ASGAFS pingerdaemon-HYDRFS pingerdaemon-SCARFS pingerdaemon-LOKIFS pingerdaemon-CAPTUW pingerdaemon-THORFW
